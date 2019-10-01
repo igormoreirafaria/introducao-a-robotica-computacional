@@ -1,12 +1,12 @@
-function robotica_trabalho_1
+function trabalho1
   %usando t�cnicas do codigo robotica_base
   %fa�a o transporte de dois objetos at� o alvo
   %com os seguintes robos:
   %Robo � criado
   Robo=Criar_Robo;
-  Robo=Criar_Robo(Robo,[10 10],2,10);
-  Robo=Criar_Robo(Robo,[20 20],1,20);
-  Robo=Criar_Robo(Robo,[0 0],1,20);
+  Robo=Criar_Robo(Robo,[10 10 0],2,10);
+  Robo=Criar_Robo(Robo,[20 20 0],1,20);
+  Robo=Criar_Robo(Robo,[0 0 0],1,20);
 
 
   %Objeto para ser transportado - a terceira posi��o � o angulo do objeto
@@ -58,82 +58,85 @@ function robotica_trabalho_1
       for j=1:length(Objeto)
         Robo(i) = Repulsao( Robo(i), Objeto(j), 1000 );
       end
+      for j=1:length(Alvo)
+        Robo(i) = Repulsao( Robo(i), Alvo(j), 1000 );
+      end
       for j=i:length(Robo)
         if i~=j 
           Robo(i)=Repulsao(Robo(i),Robo(j),1000);
         end 
       end
     end
-
-    %primeira missao - alcancar um objeto
     
-    % atração para de robos para objetos
-    for i=1:2
-      Robo(i)=Atracao(Robo(i),Objeto(1),0.1);
-      dist_obj_rob(i)=sqrt((Robo(i).pos(1)-Objeto(1).pos(1)).^2+ (Robo(i).pos(2)-Objeto(1).pos(2)).^2);  
-    end
+    %primeira missao - alcancar um objeto
+    if sqrt((Objeto(1).pos(1)-Alvo(1).pos(1)).^2+ (Objeto(1).pos(2)-Alvo(1).pos(2)).^2) > 10
+      %Primeira parte da miss�o - Robos devem ser atraidos pelo objeto
+      for i=1:3
+        Robo(i)=Atracao(Robo(i),Objeto(1),.1);
+        %Se calcula a distancia entre cada robo e o objeto
 
-    % verifica repulsão entre robos
-    for i=1:2
-      for j=1:2
-        if  (i~=j)
-          if dist_obj_rob(i) <= Robo(i).raio+Objeto(1).raio
-            Robo(i)=Repulsao(Robo(i),Robo(j),10000);
+        dist_obj_rob(i)=sqrt((Robo(i).pos(1)-Objeto(1).pos(1)).^2+ (Robo(i).pos(2)-Objeto(1).pos(2)).^2);  
+        
+      end
+      % robos se distribuem em volta do objeto engaiolando-o
+      if mean(dist_obj_rob)<=Robo(3).raio+Objeto(1).raio
+        for i=1:3
+          for j=1:3
+            if i~=j
+              Robo(i)=Atracao(Robo(i),Robo(j),-0.1);
+            end
           end
         end
       end
-    end
- 
-    % verifica a distribuição dos robos e locomoção do objeto
-    dist_robo = []
-    dist_robo_obj = []
-    for i=1:2
-      for j=i:2
-        if (i~=j)
-          dist_robo = [dist_robo; (Robo(i).pos(1)-Robo(j).pos(1)).^2+(Robo(i).pos(2)-Robo(j).pos(2)).^2 ]
+      % agora, verifica-se se os robos bem distribuidos
+      a2 = []
+      for i=1:3
+        for j=i:3
+          a2 = [a2, (Robo(i).pos(1)-Robo(j).pos(1)).^2+(Robo(i).pos(2)-Robo(j).pos(2)).^2];
         end
       end
-      dist_robo_obj = [dist_robo_obj; (Robo(i).pos(1)-Objeto(1).pos(1)).^2+(Robo(i).pos(2)-Objeto(1).pos(2)).^2 ] 
+      % move o objeto
+      
+      if [sqrt(a2(3))*2-sqrt(a2(2))-sqrt(a2(1))] < 100
+        Objeto(1)=Atracao(Objeto(1),Alvo(1),0.5); 
+      end
     end
 
-    % locomoção do objeto
-    if sqrt(dist_robo(1)) < 30 && sqrt(dist_robo_obj(1)) < 30 && sqrt(dist_robo_obj(2)) < 30 
-      Objeto(1)=Atracao(Objeto(1),Alvo(1),0.5); 
-    end
-    % atração para de robos para objetos
-    for i=3:4
-      Robo(i)=Atracao(Robo(i),Objeto(2),0.1);
-      dist_obj_rob(i)=sqrt((Robo(i).pos(1)-Objeto(2).pos(1)).^2+ (Robo(i).pos(2)-Objeto(2).pos(2)).^2);  
-    end
+    % segundo objeto
+    if sqrt((Objeto(1).pos(1)-Alvo(1).pos(1)).^2+ (Objeto(1).pos(2)-Alvo(1).pos(2)).^2) <= 10
+      dist_obj_rob(1) = 0
+      for i=2:4
+        Robo(i)=Atracao(Robo(i),Objeto(2),.1);
+        %Se calcula a distancia entre cada robo e o objeto
 
-    % verifica repulsão entre robos
-    for i=3:4
-      for j=3:4
-        if  (i~=j)
-          if dist_obj_rob(i) <= Robo(i).raio+Objeto(2).raio
-            Robo(i)=Repulsao(Robo(i),Robo(j),10000);
+        dist_obj_rob(i)=sqrt((Robo(i).pos(1)-Objeto(2).pos(1)).^2+ (Robo(i).pos(2)-Objeto(2).pos(2)).^2);  
+        
+      end
+      % robos se distribuem em volta do objeto engaiolando-o
+      if mean(dist_obj_rob)<=Robo(2).raio+Objeto(2).raio
+        for i=2:4
+          for j=2:4
+            if i~=j
+              Robo(i)=Atracao(Robo(i),Robo(j),-0.1);
+            end
           end
         end
       end
-    end
-
-    % verifica a distribuição dos robos 
-    dist_robo = []
-    dist_robo_obj = []
-    for i=3:4
-      for j=i:4
-        if (i~=j)
-          dist_robo = [dist_robo; (Robo(i).pos(1)-Robo(j).pos(1)).^2+(Robo(i).pos(2)-Robo(j).pos(2)).^2 ]
+      % agora, verifica-se se os robos bem distribuidos
+      b2 = []
+      for i=2:4
+        for j=i:4
+          b2 = [b2, (Robo(i).pos(1)-Robo(j).pos(1)).^2+(Robo(i).pos(2)-Robo(j).pos(2)).^2];
         end
       end
-      dist_robo_obj = [dist_robo_obj; (Robo(i).pos(1)-Objeto(2).pos(1)).^2+(Robo(i).pos(2)-Objeto(2).pos(2)).^2 ] 
+      % move o objeto
+      [sqrt(b2(3))*2-sqrt(b2(2))-sqrt(b2(4))] 
+      if [sqrt(b2(3))*2-sqrt(b2(2))-sqrt(b2(4))] < 85
+        Objeto(2)=Atracao(Objeto(2),Alvo(2),0.5); 
+      end
     end
 
-    % locomoção do objeto
-    if sqrt(dist_robo(1)) < 60 && sqrt(dist_robo_obj(1)) < 60 && sqrt(dist_robo_obj(2)) < 60 
-      Objeto(2)=Atracao(Objeto(2),Alvo(2),0.5); 
-    end
-  
+
 
     if mod(n,10)==0
       Exibir_Arena([400 400],Robo,Alvo,Obstaculo,Objeto);
