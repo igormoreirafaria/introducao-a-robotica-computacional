@@ -27,8 +27,12 @@ for o=1:100
   mstat = regionprops(megamanclose,"Centroid");
 %  megamanPOSITION = [];
 %  if mstat
+    
     mx = round(mstat.Centroid(1));
     my = round(mstat.Centroid(2));
+  
+    posMK(:,:,o)=[mx my];
+    
     megamanPOSITION = [mx my];
 %  endif
   for i=1:3
@@ -49,6 +53,7 @@ for o=1:100
   soma = (megamanclose.*img) + (vilaoclose.*img);
 %   soma = (megamanclose) + (vilaoclose);
 %  imshow(soma)1
+  disp(megamanPOSITION)
   drawnow;
   raio = 20;
   subplot(1,2,1);imshow(img);
@@ -56,5 +61,13 @@ for o=1:100
   
 %   imshow(img(megamanPOSITION(2)-raio:megamanPOSITION(2)+raio,megamanPOSITION(1)-raio:megamanPOSITION(1)+raio,:));  
 %  imshow(soma);
+endfor
+
+for i=1:100
+  if i ==1
+    dist_obj_rob(i)=sqrt((posMK(1,1,2)-posMK(1,1,1)).^2+ (posMK(1,2,2)-posMK(1,2,1)).^2); 
+  else
+    dist_obj_rob(i)=sqrt((posMK(1,1,i)-posMK(1,1,i-1)).^2+ (posMK(1,2,i)-posMK(1,2,i-1)).^2);
+ endif
 endfor
 
