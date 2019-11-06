@@ -29,8 +29,6 @@ for o=1:100
 %  if mstat
     mx = round(mstat.Centroid(1));
     my = round(mstat.Centroid(2));
-    posi(:,:,i)=[mx my];
-
     megamanPOSITION = [mx my];
 %  endif
   for i=1:3
@@ -52,7 +50,7 @@ for o=1:100
 %   soma = (megamanclose) + (vilaoclose);
 %  imshow(soma)1
 
-  [xe(:,i), P] = Kalman(megamanPOSITION(:,i-1), P, F, H, Q, R, z(i));
+  // [xe(:,i), P] = Kalman(megamanPOSITION(:,i-1), P, F, H, Q, R, z(i));
   drawnow;
   raio = 20;
   subplot(1,2,1);imshow(img);

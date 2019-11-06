@@ -1,32 +1,56 @@
 function [] = kalman_main()
-  x =0:100;
-  z = x + randn(1, 101);
   
-  xe = [x(1);0]  
-  P = (x(1) - z(1)) * (x(1) - z(1))';
-  F = [1 1;0 1];
-  H = [1 0];
-  Q = [0 0;0 1]*0.1;
-  R = 1;
+  kq = 0.001;
+  kr = 0.9;
+
+  z = []
+  for i=1:101
+    z(i, 1) = i + randn();
+    z(i, 2) = i + randn();
+  end
+  
+  F = [1 1 0 0 0 0;
+       0 1 1 0 0 0;
+       0 0 1 0 0 0;
+       0 0 0 1 1 0;
+       0 0 0 0 1 1;
+       0 0 0 0 0 1;];
+
+  H = [1 0 0 0 0 0;
+       0 0 0 1 0 0;];
+
+  Q = eye(6)*kq;
+  R = eye(2)*kr;
+ 
+  P = zeros(6);
+
+  estados(1, :)  = [z(1,1) 0 0 z(1, 2) 0 0];
   
   for i=2:101
-    [xe(:,i), P] = Kalman(xe(:,i-1), P, F, H, Q, R, z(i));
+    [estados(i,:), P] = Kalman(estados(i-1,:), P, F, H, Q, R, z(i,:)');
   end
+
+
   %z e o ruido 
   %x e a correta 
-  %xe e o estimado 
-  plot(1,101,xe(1,:),'-k',1,101,x,'-g',1,101,z,'-r');
+  %xe e o estimado
+
+  pl = plot(z(:,1), z(:,2), 'r.-', estados(:, 1), estados(:, 4), 'b.-'); 
+  waitfor(pl);
+  
+  %plot(1,101,xe(1,:),'-k',1,101,x,'-g',1,101,z,'-r');
   
   
 end
 
 
 function[x, P] = Kalman(x, P, F, H, Q, R, z)
-  xa = F*x;
+  xa = F*x';                          % previsão a priori
   Pa = F*P*F' + Q;
   y = (z - H*xa);
   K = Pa*H'/(H*Pa*H' + R);
   x = xa + K*y;
   P = (eye(length(x)) - K*H)*Pa;
+  x = x';
 end
 
