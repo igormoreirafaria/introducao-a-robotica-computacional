@@ -50,7 +50,7 @@ for o=1:100
 %   soma = (megamanclose) + (vilaoclose);
 %  imshow(soma)1
 
-  // [xe(:,i), P] = Kalman(megamanPOSITION(:,i-1), P, F, H, Q, R, z(i));
+  % // [xe(:,i), P] = Kalman(megamanPOSITION(:,i-1), P, F, H, Q, R, z(i));
   drawnow;
   raio = 20;
   subplot(1,2,1);imshow(img);
