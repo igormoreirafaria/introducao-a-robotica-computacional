@@ -52,7 +52,41 @@ for o=1:100
 %   soma = (megamanclose) + (vilaoclose);
 %  imshow(soma)1
 
-  [xe(:,i), P] = Kalman(megamanPOSITION(:,i-1), P, F, H, Q, R, z(i));
+  % [xe(:,i), P] = Kalman(megamanPOSITION(:,i-1), P, F, H, Q, R, z(i));
+  kq = 0.001;
+  kr = 0.9;
+  %z=[];
+  z = megamanPOSITION;
+  
+  F = [1 1 0 0 0 0;
+       0 1 1 0 0 0;
+       0 0 1 0 0 0;
+       0 0 0 1 1 0;
+       0 0 0 0 1 1;
+       0 0 0 0 0 1;];
+
+  H = [1 0 0 0 0 0;
+       0 0 0 1 0 0;];
+
+  Q = eye(6)*kq;
+  R = eye(2)*kr;
+ 
+  P = zeros(6);
+
+  estados(1, :)  = [z(1,1) 0 0 z(1, 2) 0 0];
+  
+  for i=2:101
+    [estados(i,:), P] = Kalman(estados(i-1,:), P, F, H, Q, R, z(i,:)');
+  end
+
+
+  %z e o ruido 
+  %x e a correta 
+  %xe e o estimado
+
+  pl = plot(z(:,1), z(:,2), 'r.-', estados(:, 1), estados(:, 4), 'b.-'); 
+  waitfor(pl);
+
   drawnow;
   raio = 20;
   subplot(1,2,1);imshow(img);
@@ -60,5 +94,15 @@ for o=1:100
   
 %   imshow(img(megamanPOSITION(2)-raio:megamanPOSITION(2)+raio,megamanPOSITION(1)-raio:megamanPOSITION(1)+raio,:));  
 %  imshow(soma);
+
 endfor
 
+function[x, P] = Kalman(x, P, F, H, Q, R, z)
+  xa = F*x';                          % previsão a priori
+  Pa = F*P*F' + Q;
+  y = (z - H*xa);
+  K = Pa*H'/(H*Pa*H' + R);
+  x = xa + K*y;
+  P = (eye(length(x)) - K*H)*Pa;
+  x = x';
+end
