@@ -43,7 +43,11 @@ function [] = kalman_ordem1()
   pl = plot(z(:,1), z(:,2), 'r.-', estados(:, 1), estados(:, 2), 'b.-'); 
   waitfor(pl);
   
+<<<<<<< HEAD
   plot(1,101,xe(1,:),'-k',1,101,x,'-g',1,101,z,'-r');
+=======
+  % plot(1,101,xe(1,:),'-k',1,101,x,'-g',1,101,z,'-r');
+>>>>>>> c0ab825efc5cfba3c66b7a8f9f175dc5b188a2cb
   
 end
  
@@ -87,12 +91,20 @@ end
   pl = plot(z(:,1), z(:,2), 'r.-', estados(:, 1), estados(:, 3), 'b.-'); 
   waitfor(pl);
   
+<<<<<<< HEAD
   plot(1,101,xe(1,:),'-k',1,101,x,'-g',1,101,z,'-r');
+=======
+  % plot(1,101,xe(1,:),'-k',1,101,x,'-g',1,101,z,'-r');
+>>>>>>> c0ab825efc5cfba3c66b7a8f9f175dc5b188a2cb
   
 end
 
 function [] = kalman_ordem3()
    
+<<<<<<< HEAD
+=======
+   
+>>>>>>> c0ab825efc5cfba3c66b7a8f9f175dc5b188a2cb
   kq = 0.001;
   kr = 0.9;
 
@@ -133,7 +145,11 @@ function [] = kalman_ordem3()
   pl = plot(z(:,1), z(:,2), 'r.-', estados(:, 1), estados(:, 4), 'b.-'); 
   waitfor(pl);
   
+<<<<<<< HEAD
   plot(1,101,xe(1,:),'-k',1,101,x,'-g',1,101,z,'-r');
+=======
+  % plot(1,101,xe(1,:),'-k',1,101,x,'-g',1,101,z,'-r');
+>>>>>>> c0ab825efc5cfba3c66b7a8f9f175dc5b188a2cb
   
 end
 
